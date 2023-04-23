@@ -1,0 +1,17 @@
+{
+    "cmake.configureArgs": [
+        "-DVCPKG_MANIFEST_MODE=OFF",
+        "-DVCPKG_APPLOCAL_DEPS=ON",
+        "-DX_VCPKG_APPLOCAL_DEPS_INSTALL=ON",
+        "-DVCPKG_PREFER_SYSTEM_LIBS=OFF",
+        "-DVCPKG_TARGET_TRIPLET=x64-windows"
+    ],
+    "vcpkg.general.enable": false,
+    "vcpkg.target.defaultTriplet": "x64-windows",
+    "cmake.configureSettings": {},
+    "vcpkg.target.preferSystemLibs": false,
+    "vcpkg.target.useManifest": false,
+    "vcpkg.target.hostTriplet": "x64-windows",
+    "vcpkg.target.useStaticLib": false,
+    "vcpkg.target.installDependencies": true
+}
