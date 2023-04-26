@@ -19,7 +19,7 @@ void UpdateThread(Grid* grid)
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 1000), "Tetris", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode(800, 1000), "Tetris", sf::Style::Fullscreen);
 
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
@@ -35,7 +35,8 @@ int main()
 	score.setString("0");
 	score.setCharacterSize(32);
 	score.setFillColor(sf::Color::White);
-	score.setPosition({ 100, 100 });
+	score.setPosition({ (float)(window.getSize().x - size * 10) / 2 + size * 10 + 10,
+						(float)(window.getSize().y - size * 20) / 2 });
 
 	Gui gui(window, font);
 
@@ -95,7 +96,7 @@ int main()
 						window.close();
 					}
 				}
-					
+
 			}
 
 		}
