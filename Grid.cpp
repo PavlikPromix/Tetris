@@ -17,20 +17,20 @@ Grid::Grid(sf::RenderWindow& window)
 		grid[i].setPosition({ border.getPosition().x + size * (i % 10),
 							border.getPosition().y + size * (i / 10) });
 		grid[i].setFillColor(sf::Color::Transparent);
-		grid[i].setOutlineThickness(1);
 		grid[i].setOutlineColor(sf::Color(20, 20, 20));
+		//grid[i].setOutlineThickness(1);
 	}
 
 	score = 0;
-
+	
 	CreatePiece();
 }
 
 void Grid::CreatePiece()
 {
+	srand(time(0));
 	Piece::PieceType type = Piece::SQUARE;
 	int rnd = rand() % 7;
-	//int rnd = 0;
 	switch (rnd) {
 		case 0:
 			type = Piece::LONG;
@@ -159,10 +159,10 @@ void Grid::Render(sf::RenderWindow& window)
 	window.draw(border);
 }
 
-void Grid::Update(bool& running)
+void Grid::Update(bool& inGame)
 {
 	if (border.getOutlineColor() == sf::Color::Red)
-		running = false;
+		inGame = false;
 
 	for (int i = 0; i < 200; i++)
 		grid[i].setFillColor(sf::Color::Transparent);

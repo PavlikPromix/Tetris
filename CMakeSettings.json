@@ -3,11 +3,10 @@
     {
       "name": "x64-Clang-Release",
       "generator": "Ninja",
-      "configurationType": "RelWithDebInfo",
+      "configurationType": "MinSizeRel",
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
       "ctestCommandArgs": "",
       "cmakeToolchain": "C:/Dev/vcpkg-2022.08.15/scripts/buildsystems/vcpkg.cmake",
       "inheritEnvironments": [ "clang_cl_x64_x64" ]
@@ -34,8 +33,7 @@
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
       "cmakeToolchain": "C:/Dev/vcpkg-2022.08.15/scripts/buildsystems/vcpkg.cmake",
-      "inheritEnvironments": [ "clang_cl_x64_x64" ],
-      "variables": []
+      "inheritEnvironments": [ "clang_cl_x64_x64" ]
     }
   ]
 }

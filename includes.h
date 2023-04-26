@@ -12,5 +12,6 @@
 #include <SFML/Graphics.hpp>
 #include "Piece.h"
 #include "Grid.h"
+#include "gui/Gui.h"
 
 inline constexpr int size = 40;

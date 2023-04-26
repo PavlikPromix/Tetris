@@ -6,15 +6,13 @@ class Grid
 public:
 	Grid(sf::RenderWindow& window);
 
-
-
 	void MoveDown();
 	void MoveLeft();
 	void MoveRight();
 	void Rotate();
 	void InstantDown();
 	void Render(sf::RenderWindow& window);
-	void Update(bool& running);
+	void Update(bool& inGame);
 
 	int GetScore();
 private:
