@@ -161,8 +161,11 @@ void Grid::Render(sf::RenderWindow& window)
 
 void Grid::Update(bool& inGame)
 {
-	if (border.getOutlineColor() == sf::Color::Red)
+	if (border.getOutlineColor() == sf::Color::Red) {
 		inGame = false;
+		border.setOutlineColor(sf::Color::White);
+		blocks.clear();
+	}
 
 	for (int i = 0; i < 200; i++)
 		grid[i].setFillColor(sf::Color::Transparent);
