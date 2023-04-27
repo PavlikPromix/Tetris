@@ -28,10 +28,10 @@ Piece::Piece(PieceType p_type, sf::Vector2f pos)
 			p_coords[3] = { 2, 1 };
 			break;
 		case Piece::LBACK:
-			p_coords[0] = { 0, 0 };
-			p_coords[1] = { 0, 1 };
-			p_coords[2] = { 1, 1 };
-			p_coords[3] = { 2, 1 };
+			p_coords[0] = { 0, 1 };
+			p_coords[1] = { 1, 1 };
+			p_coords[2] = { 2, 1 };
+			p_coords[3] = { 2, 0 };
 			break;
 		case Piece::SQUARE:
 			p_coords[0] = { 0, 0 };
