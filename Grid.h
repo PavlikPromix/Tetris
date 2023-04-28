@@ -15,6 +15,7 @@ public:
 	void Update(bool& inGame);
 
 	int GetScore();
+	void Reset();
 private:
 	sf::RectangleShape border;
 	sf::RectangleShape grid[200];

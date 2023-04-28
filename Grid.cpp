@@ -164,7 +164,7 @@ void Grid::Update(bool& inGame)
 	if (border.getOutlineColor() == sf::Color::Red) {
 		inGame = false;
 		border.setOutlineColor(sf::Color::White);
-		blocks.clear();
+		Reset();
 	}
 
 	for (int i = 0; i < 200; i++)
@@ -180,6 +180,13 @@ void Grid::Update(bool& inGame)
 int Grid::GetScore()
 {
 	return score;
+}
+
+void Grid::Reset()
+{
+	score = 0;
+	blocks.clear();
+	CreatePiece();
 }
 
 void Grid::Mount()

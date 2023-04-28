@@ -1,4 +1,5 @@
-﻿#include "includes.h"
+﻿#define _WIN32_WINNT 0x0500
+#include "includes.h"
 
 bool running = true;
 bool inGame = false;
@@ -19,6 +20,8 @@ void UpdateThread(Grid* grid)
 
 int main()
 {
+	HWND consoleWindow = GetConsoleWindow();
+	ShowWindow(consoleWindow, SW_HIDE);
 	sf::RenderWindow window(sf::VideoMode(800, 1000), "Tetris", sf::Style::Fullscreen);
 
 	window.setFramerateLimit(60);
@@ -53,9 +56,15 @@ int main()
 				window.close();
 			}
 			if (e.type == sf::Event::KeyPressed && e.key.code == sf::Keyboard::Q) {
-				running = false;
-				updThread.join();
-				window.close();
+				if (inGame) {
+					inGame = false;
+					grid.Reset();
+				}
+				else {
+					running = false;
+					updThread.join();
+					window.close();
+				}
 			}
 			if (e.type == sf::Event::KeyPressed && (e.key.code == sf::Keyboard::A || e.key.code == sf::Keyboard::Left)) { // Left
 				if (inGame)
@@ -89,8 +98,10 @@ int main()
 					if (gui.GetSelected() == 0)
 						inGame = true;
 					if (gui.GetSelected() == 1)
-						gui.SwitchControls();
-					if (gui.GetSelected() == 2) {
+						gui.ToggleControlsMenu();
+					if (gui.GetSelected() == 2)
+						gui.ToggleStatsMenu();
+					if (gui.GetSelected() == 3) {
 						running = false;
 						updThread.join();
 						window.close();

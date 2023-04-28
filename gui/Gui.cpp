@@ -10,7 +10,7 @@ Gui::Gui(sf::RenderWindow& window, sf::Font& p_font)
 	font = p_font;
 
 	menuItems.reserve(3);
-	for (size_t i = 0; i < 3; i++)
+	for (size_t i = 0; i < 4; i++)
 		menuItems.push_back(sf::Text());
 
 	for (sf::Text& i : menuItems) {
@@ -21,22 +21,26 @@ Gui::Gui(sf::RenderWindow& window, sf::Font& p_font)
 
 	menuItems[0].setString("Play");
 	menuItems[0].setPosition({ GetHorizontalCenteredPos(menuItems[0]),
-						 background.getPosition().y + size * 4 });
+						 background.getPosition().y + size * 3 });
 
 	menuItems[1].setString("Controls");
 	menuItems[1].setPosition({ GetHorizontalCenteredPos(menuItems[1]),
-						 background.getPosition().y + size * 9 });
+						 background.getPosition().y + size * 7 });
 
-	menuItems[2].setString("Exit");
+	menuItems[2].setString("Stats");
 	menuItems[2].setPosition({ GetHorizontalCenteredPos(menuItems[2]),
-						 background.getPosition().y + size * 14 });
+						 background.getPosition().y + size * 11 });
+	
+	menuItems[3].setString("Exit");
+	menuItems[3].setPosition({ GetHorizontalCenteredPos(menuItems[3]),
+						 background.getPosition().y + size * 15 });
 
 
-
+	// Controls menu
 	controlsText.setFillColor(sf::Color(150, 150, 150));
 	controlsText.setCharacterSize(20);
 	controlsText.setFont(font);
-	controlsText.setString("# Controls\n\n* Down \nS / Down Arrow\n\n* Left \nA / Left Arrow\n\n* Right \nD / Right Arrow\n\n* Rotate \nW / Up Arrow\n\n* Instant Down \nSpace\n\n* Quit\nQ");
+	controlsText.setString("# Controls\n\n\n* Down \nS / Down Arrow\n\n* Left \nA / Left Arrow\n\n* Right \nD / Right Arrow\n\n* Rotate \nW / Up Arrow\n\n* Instant Down \nSpace\n\n* Quit\nQ");
 	controlsText.setPosition({ background.getPosition().x + size * 1,
 						 background.getPosition().y + size * 3 });
 
@@ -46,11 +50,26 @@ Gui::Gui(sf::RenderWindow& window, sf::Font& p_font)
 	controlsBack.setString("Back");
 	controlsBack.setPosition({ GetHorizontalCenteredPos(controlsBack),
 						 background.getPosition().y + size * 15 });
+
+	// Stats menu
+	statsText.setFillColor(sf::Color(150, 150, 150));
+	statsText.setCharacterSize(20);
+	statsText.setFont(font);
+	statsText.setString("# Stats\n\n\nMax score: \n\nTotal score: \n\n");
+	statsText.setPosition({ background.getPosition().x + size * 1,
+						 background.getPosition().y + size * 3 });
+
+	statsBack.setFillColor(sf::Color::White);
+	statsBack.setCharacterSize(32);
+	statsBack.setFont(font);
+	statsBack.setString("Back");
+	statsBack.setPosition({ GetHorizontalCenteredPos(statsBack),
+						 background.getPosition().y + size * 15 });
 }
 
 void Gui::SelectNext()
 {
-	if (inControls) return;
+	if (inControlsMenu) return;
 	if (mainSelection == menuItems.size() - 1)
 		mainSelection = 0;
 	else mainSelection++;
@@ -58,7 +77,7 @@ void Gui::SelectNext()
 
 void Gui::SelectPrev()
 {
-	if (inControls) return;
+	if (inControlsMenu) return;
 	if (mainSelection == 0)
 		mainSelection = menuItems.size() - 1;
 	else mainSelection--;
@@ -69,17 +88,27 @@ int Gui::GetSelected()
 	return mainSelection;
 }
 
-void Gui::SwitchControls()
+void Gui::ToggleControlsMenu()
 {
-	inControls = !inControls;
+	inControlsMenu = !inControlsMenu;
+}
+
+void Gui::ToggleStatsMenu()
+{
+	inStatsMenu = !inStatsMenu;
 }
 
 void Gui::Render(sf::RenderWindow& window)
 {
 	window.draw(background);
-	if (inControls) {
+	if (inControlsMenu) {
 		window.draw(controlsText);
 		window.draw(controlsBack);
+		return;
+	}
+	if (inStatsMenu) {
+		window.draw(statsText);
+		window.draw(statsBack);
 		return;
 	}
 	for (sf::Text& i : menuItems)

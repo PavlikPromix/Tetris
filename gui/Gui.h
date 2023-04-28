@@ -15,14 +15,15 @@ public:
 	void SelectPrev();
 	int GetSelected();
 
-	void SwitchControls();
+	void ToggleControlsMenu();
+	void ToggleStatsMenu();
 
 	void Render(sf::RenderWindow& window);
 	void Update();
 private:
-	bool isOpen = true;
 	int mainSelection = 0;
-	bool inControls = false;
+	bool inControlsMenu = false;
+	bool inStatsMenu = false;
 
 	sf::RectangleShape background;
 
@@ -30,6 +31,8 @@ private:
 	std::vector<sf::Text> menuItems;
 	sf::Text controlsText;
 	sf::Text controlsBack;
+	sf::Text statsText;
+	sf::Text statsBack;
 
 	float GetHorizontalCenteredPos(sf::Text& text);
 };

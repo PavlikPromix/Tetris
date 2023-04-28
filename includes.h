@@ -10,6 +10,7 @@
 #include <array>
 #include <string>
 #include <SFML/Graphics.hpp>
+#include <windows.h>
 #include "Piece.h"
 #include "Grid.h"
 #include "gui/Gui.h"
