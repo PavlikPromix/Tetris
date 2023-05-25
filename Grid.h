@@ -20,7 +20,7 @@ public:
 private:
 	sf::RectangleShape border;
 	sf::RectangleShape grid[200];
-	std::vector<sf::Vector2f> blocks;
+	std::vector<Block> blocks;
 	Piece controllable;
 	int score;
 	bool colorMode;

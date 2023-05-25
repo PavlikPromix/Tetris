@@ -22,7 +22,7 @@ Grid::Grid(sf::RenderWindow& window)
 	}
 
 	score = 0;
-	
+
 	CreatePiece();
 }
 
@@ -30,60 +30,43 @@ void Grid::CreatePiece()
 {
 	srand(time(0));
 	Piece::PieceType type = Piece::SQUARE;
+	sf::Color color = sf::Color::White;
 	int rnd = rand() % 7;
 	switch (rnd) {
 		case 0:
 			type = Piece::LONG;
+			color = sf::Color(133, 193, 233); // Blue
 			break;
 		case 1:
 			type = Piece::L;
+			color = sf::Color(255, 165, 0); // Orange
 			break;
 		case 2:
 			type = Piece::LBACK;
+			color = sf::Color(220, 118, 51); // Red
 			break;
 		case 3:
 			type = Piece::SQUARE;
+			color = sf::Color(244, 208, 63); // Yellow
 			break;
 		case 4:
 			type = Piece::Z;
+			color = sf::Color(165, 105, 189); // Magenta
 			break;
 		case 5:
 			type = Piece::ZBACK;
+			color = sf::Color(205, 97, 85); // Brown
 			break;
 		case 6:
 			type = Piece::T;
+			color = sf::Color(82, 190, 128); // Green
 			break;
 		default:
 			break;
 	}
-	if (colorMode) {
+	if (!colorMode) {
 		controllable = Piece(type, { 4, 0 }, sf::Color::White);
 		return;
-	}
-	
-	sf::Color color = sf::Color::White;
-	rnd = rand() % 6;
-	switch (rnd) {
-		case 0:
-			color = sf::Color::Yellow;
-			break;
-		case 1:
-			color = sf::Color::Blue;
-			break;
-		case 2:
-			color = sf::Color::Red;
-			break;
-		case 3:
-			color = sf::Color::Green;
-			break;
-		case 4:
-			color = sf::Color::Cyan;
-			break;
-		case 5:
-			color = sf::Color::Magenta;
-			break;
-		default:
-			break;
 	}
 
 	controllable = Piece(type, { 4, 0 }, color);
@@ -97,8 +80,8 @@ void Grid::MoveDown()
 			Mount();
 			return;
 		}
-		for (sf::Vector2f& block : blocks)
-			if (coord + sf::Vector2f { 0, 1 } == block) {
+		for (Block& block : blocks)
+			if (coord + sf::Vector2f { 0, 1 } == block.pos) {
 				Mount();
 				return;
 			}
@@ -114,8 +97,8 @@ void Grid::MoveLeft()
 		if (coord.x == 0)
 			return;
 
-		for (sf::Vector2f& block : blocks)
-			if (coord + sf::Vector2f { -1, 0 } == block)
+		for (Block& block : blocks)
+			if (coord + sf::Vector2f { -1, 0 } == block.pos)
 				return;
 	}
 
@@ -129,8 +112,8 @@ void Grid::MoveRight()
 		if (coord.x == 9)
 			return;
 
-		for (sf::Vector2f& block : blocks)
-			if (coord + sf::Vector2f { 1, 0 } == block)
+		for (Block& block : blocks)
+			if (coord + sf::Vector2f { 1, 0 } == block.pos)
 				return;
 	}
 
@@ -142,11 +125,11 @@ void Grid::Rotate()
 	Piece copy = Piece(controllable);
 	copy.Rotate();
 	for (sf::Vector2f& part : copy.GetParts()) {
-		for (sf::Vector2f& block : blocks) {
+		for (Block& block : blocks) {
 			sf::Vector2f coord = copy.GetPosition() + part;
 			if (coord.x > 9 || coord.x < 0 || coord.y > 19 || coord.y < 0)
 				return;
-			if (coord == block)
+			if (coord == block.pos)
 				return;
 		}
 	}
@@ -171,7 +154,7 @@ void Grid::InstantDown()
 		partY++;
 		int stepsForColumn = 0;
 		for (int y = partY; y < 20; y++) {
-			if (GridAt(x, y).getFillColor() == sf::Color::White) {
+			if (GridAt(x, y).getFillColor() != sf::Color::Transparent) {
 				break;
 			}
 			stepsForColumn++;
@@ -202,10 +185,10 @@ void Grid::Update(bool& inGame)
 
 	for (sf::Vector2f& part : controllable.GetParts())
 		GridAt(controllable.GetPosition().x + part.x, controllable.GetPosition().y + part.y)
-		.setFillColor(sf::Color::White);
+		.setFillColor(controllable.GetColor());
 
-	for (sf::Vector2f& block : blocks)
-		GridAt(block.x, block.y).setFillColor(sf::Color::White);
+	for (Block& block : blocks)
+		GridAt(block.pos.x, block.pos.y).setFillColor(block.color);
 }
 
 void Grid::SetColorMode(bool p_colorMode)
@@ -232,8 +215,8 @@ void Grid::Mount()
 		if (controllable.GetPosition().y + part.y == 0)
 			border.setOutlineColor(sf::Color::Red);
 
-		blocks.push_back({ controllable.GetPosition().x + part.x,
-						 controllable.GetPosition().y + part.y });
+		blocks.push_back({ { controllable.GetPosition().x + part.x,
+						 controllable.GetPosition().y + part.y }, controllable.GetColor() });
 	}
 
 	CreatePiece();
@@ -247,11 +230,11 @@ void Grid::Mount()
 			inrow += 1;
 		}
 		if (inrow == 10) {
-			blocks.erase(std::remove_if(blocks.begin(), blocks.end(), [&y](sf::Vector2f block) { return block.y == y; }), blocks.end());
+			blocks.erase(std::remove_if(blocks.begin(), blocks.end(), [&y](Block block) { return block.pos.y == y; }), blocks.end());
 
-			for (sf::Vector2f& block : blocks)
-				if (block.y < y)
-					block += { 0, 1 };
+			for (Block& block : blocks)
+				if (block.pos.y < y)
+					block.pos += { 0, 1 };
 
 			score++;
 		}
