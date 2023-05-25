@@ -11,9 +11,10 @@ Piece::Piece()
 	position = { };
 }
 
-Piece::Piece(PieceType p_type, sf::Vector2f pos)
+Piece::Piece(PieceType p_type, sf::Vector2f pos, sf::Color p_color)
 {
 	type = p_type;
+	color = p_color;
 	switch (p_type) {
 		case Piece::LONG:
 			p_coords[0] = { 0, 0 };
@@ -71,6 +72,11 @@ std::array<sf::Vector2f, 4> Piece::GetParts()
 sf::Vector2f Piece::GetPosition()
 {
 	return position;
+}
+
+sf::Color Piece::GetColor()
+{
+	return color;
 }
 
 void Piece::MoveDown()

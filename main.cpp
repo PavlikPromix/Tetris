@@ -20,8 +20,6 @@ void UpdateThread(Grid* grid)
 
 int main()
 {
-	HWND consoleWindow = GetConsoleWindow();
-	ShowWindow(consoleWindow, SW_HIDE);
 	sf::RenderWindow window(sf::VideoMode(800, 1000), "Tetris", sf::Style::Fullscreen);
 
 	window.setFramerateLimit(60);
@@ -99,9 +97,17 @@ int main()
 						inGame = true;
 					if (gui.GetSelected() == 1)
 						gui.ToggleControlsMenu();
-					if (gui.GetSelected() == 2)
+					if (gui.GetSelected() == 2) {
+						if ((gui.IsInSettings() && gui.GetSubSelected() == 1) || !gui.IsInSettings())
+							gui.ToggleSettingsMenu();
+						else if (gui.IsInSettings() && gui.GetSubSelected() == 0) {
+							gui.ToggleColorMode();
+							grid.SetColorMode(gui.GetColorMode());
+						}
+					}
+					if (gui.GetSelected() == 3)
 						gui.ToggleStatsMenu();
-					if (gui.GetSelected() == 3) {
+					if (gui.GetSelected() == 4) {
 						running = false;
 						updThread.join();
 						window.close();

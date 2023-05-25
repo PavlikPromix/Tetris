@@ -4,6 +4,7 @@ project ("main")
 
 find_package(SFML COMPONENTS system window graphics REQUIRED)
 
+include_directories(${SFML_INCLUDE_DIR})
 add_executable (main "main.cpp" "includes.h" "Piece.cpp" "Piece.h" "Grid.cpp" "Grid.h" "gui/Gui.cpp" "gui/Gui.h")
 
 target_link_libraries(main PRIVATE sfml-system sfml-window sfml-graphics)

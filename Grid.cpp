@@ -56,7 +56,37 @@ void Grid::CreatePiece()
 		default:
 			break;
 	}
-	controllable = Piece(type, { 4, 0 });
+	if (colorMode) {
+		controllable = Piece(type, { 4, 0 }, sf::Color::White);
+		return;
+	}
+	
+	sf::Color color = sf::Color::White;
+	rnd = rand() % 6;
+	switch (rnd) {
+		case 0:
+			color = sf::Color::Yellow;
+			break;
+		case 1:
+			color = sf::Color::Blue;
+			break;
+		case 2:
+			color = sf::Color::Red;
+			break;
+		case 3:
+			color = sf::Color::Green;
+			break;
+		case 4:
+			color = sf::Color::Cyan;
+			break;
+		case 5:
+			color = sf::Color::Magenta;
+			break;
+		default:
+			break;
+	}
+
+	controllable = Piece(type, { 4, 0 }, color);
 }
 
 void Grid::MoveDown()
@@ -171,11 +201,18 @@ void Grid::Update(bool& inGame)
 		grid[i].setFillColor(sf::Color::Transparent);
 
 	for (sf::Vector2f& part : controllable.GetParts())
-		GridAt(controllable.GetPosition().x + part.x, controllable.GetPosition().y + part.y).setFillColor(sf::Color::White);
+		GridAt(controllable.GetPosition().x + part.x, controllable.GetPosition().y + part.y)
+		.setFillColor(sf::Color::White);
 
 	for (sf::Vector2f& block : blocks)
 		GridAt(block.x, block.y).setFillColor(sf::Color::White);
 }
+
+void Grid::SetColorMode(bool p_colorMode)
+{
+	colorMode = p_colorMode;
+}
+
 
 int Grid::GetScore()
 {

@@ -9,30 +9,34 @@ Gui::Gui(sf::RenderWindow& window, sf::Font& p_font)
 
 	font = p_font;
 
-	menuItems.reserve(3);
-	for (size_t i = 0; i < 4; i++)
-		menuItems.push_back(sf::Text());
+	// Main menu
+	mainMenuItems.reserve(5);
+	for (int i = 0; i < 5; i++)
+		mainMenuItems.push_back(sf::Text());
 
-	for (sf::Text& i : menuItems) {
+	for (sf::Text& i : mainMenuItems) {
 		i.setFillColor(sf::Color::White);
 		i.setCharacterSize(32);
 		i.setFont(font);
 	}
 
-	menuItems[0].setString("Play");
-	menuItems[0].setPosition({ GetHorizontalCenteredPos(menuItems[0]),
+	mainMenuItems[0].setString("Play");
+	mainMenuItems[0].setPosition({ GetHorizontalCenteredPos(mainMenuItems[0]),
 						 background.getPosition().y + size * 3 });
 
-	menuItems[1].setString("Controls");
-	menuItems[1].setPosition({ GetHorizontalCenteredPos(menuItems[1]),
-						 background.getPosition().y + size * 7 });
+	mainMenuItems[1].setString("Controls");
+	mainMenuItems[1].setPosition({ GetHorizontalCenteredPos(mainMenuItems[1]),
+						 background.getPosition().y + size * 6 });
+	mainMenuItems[2].setString("Settings");
+	mainMenuItems[2].setPosition({ GetHorizontalCenteredPos(mainMenuItems[2]),
+						 background.getPosition().y + size * 9 });
 
-	menuItems[2].setString("Stats");
-	menuItems[2].setPosition({ GetHorizontalCenteredPos(menuItems[2]),
-						 background.getPosition().y + size * 11 });
+	mainMenuItems[3].setString("Stats");
+	mainMenuItems[3].setPosition({ GetHorizontalCenteredPos(mainMenuItems[3]),
+						 background.getPosition().y + size * 12 });
 	
-	menuItems[3].setString("Exit");
-	menuItems[3].setPosition({ GetHorizontalCenteredPos(menuItems[3]),
+	mainMenuItems[4].setString("Exit");
+	mainMenuItems[4].setPosition({ GetHorizontalCenteredPos(mainMenuItems[4]),
 						 background.getPosition().y + size * 15 });
 
 
@@ -65,12 +69,39 @@ Gui::Gui(sf::RenderWindow& window, sf::Font& p_font)
 	statsBack.setString("Back");
 	statsBack.setPosition({ GetHorizontalCenteredPos(statsBack),
 						 background.getPosition().y + size * 15 });
+	
+	// Settings menu
+	settingsMenuItems.reserve(2);
+	for (int i = 0; i < 2; i++)
+		settingsMenuItems.push_back(sf::Text());
+
+	for (sf::Text& i : settingsMenuItems) {
+		i.setFillColor(sf::Color::White);
+		i.setCharacterSize(20);
+		i.setFont(font);
+	}
+
+	settingsMenuItems[0].setString("Enable ColorMod");
+	settingsMenuItems[0].setPosition({ GetHorizontalCenteredPos(settingsMenuItems[0]),
+						 background.getPosition().y + size * 6 });
+	settingsMenuItems[1].setString("Back");
+	settingsMenuItems[1].setCharacterSize(32);
+	settingsMenuItems[1].setPosition({ GetHorizontalCenteredPos(settingsMenuItems[1]),
+						 background.getPosition().y + size * 14 });
+
 }
 
 void Gui::SelectNext()
 {
 	if (inControlsMenu) return;
-	if (mainSelection == menuItems.size() - 1)
+	if (inStatsMenu) return;
+	if (inSettingsMenu) {
+		if (subSelection == settingsMenuItems.size() - 1)
+			subSelection = 0;
+		else subSelection++;
+		return;
+	}
+	if (mainSelection == mainMenuItems.size() - 1)
 		mainSelection = 0;
 	else mainSelection++;
 }
@@ -78,14 +109,36 @@ void Gui::SelectNext()
 void Gui::SelectPrev()
 {
 	if (inControlsMenu) return;
+	if (inStatsMenu) return;
+	if (inSettingsMenu) {
+		if (subSelection == 0)
+			subSelection = settingsMenuItems.size() - 1;
+		else subSelection--;
+		return;
+	}
 	if (mainSelection == 0)
-		mainSelection = menuItems.size() - 1;
+		mainSelection = mainMenuItems.size() - 1;
 	else mainSelection--;
 }
 
 int Gui::GetSelected()
 {
 	return mainSelection;
+}
+
+int Gui::GetSubSelected()
+{
+	return subSelection;
+}
+
+bool Gui::GetColorMode()
+{
+	return colorMode;
+}
+
+bool Gui::IsInSettings()
+{
+	return inSettingsMenu;
 }
 
 void Gui::ToggleControlsMenu()
@@ -97,6 +150,19 @@ void Gui::ToggleStatsMenu()
 {
 	inStatsMenu = !inStatsMenu;
 }
+
+void Gui::ToggleSettingsMenu()
+{
+	inSettingsMenu = !inSettingsMenu;
+	if (inSettingsMenu)
+		subSelection = 0;
+}
+
+void Gui::ToggleColorMode()
+{
+	colorMode = !colorMode;
+}
+
 
 void Gui::Render(sf::RenderWindow& window)
 {
@@ -111,16 +177,31 @@ void Gui::Render(sf::RenderWindow& window)
 		window.draw(statsBack);
 		return;
 	}
-	for (sf::Text& i : menuItems)
+	if (inSettingsMenu) {
+		for (sf::Text& i : settingsMenuItems)
+			window.draw(i);
+		return;
+	}
+	for (sf::Text& i : mainMenuItems)
 		window.draw(i);
 
 }
 
 void Gui::Update()
 {
-	for (sf::Text& i : menuItems)
+	for (sf::Text& i : mainMenuItems)
 		i.setFillColor(sf::Color(150, 150, 150));
-	menuItems[mainSelection].setFillColor(sf::Color::White);
+	mainMenuItems[mainSelection].setFillColor(sf::Color::White);
+
+	// Settings
+	for (sf::Text& i : settingsMenuItems)
+		i.setFillColor(sf::Color(150, 150, 150));
+	settingsMenuItems[subSelection].setFillColor(sf::Color::White);
+	if (colorMode) 
+		settingsMenuItems[0].setString("Disable ColorMod");
+	else settingsMenuItems[0].setString("Enable ColorMod");
+	settingsMenuItems[0].setPosition({ GetHorizontalCenteredPos(settingsMenuItems[0]),
+						 background.getPosition().y + size * 6 });
 }
 
 float Gui::GetHorizontalCenteredPos(sf::Text& text)

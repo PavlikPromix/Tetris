@@ -13,6 +13,7 @@ public:
 	void InstantDown();
 	void Render(sf::RenderWindow& window);
 	void Update(bool& inGame);
+	void SetColorMode(bool p_colorMode);
 
 	int GetScore();
 	void Reset();
@@ -22,6 +23,7 @@ private:
 	std::vector<sf::Vector2f> blocks;
 	Piece controllable;
 	int score;
+	bool colorMode;
 
 	void CreatePiece();
 	void Mount();
