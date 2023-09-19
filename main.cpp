@@ -20,7 +20,7 @@ void UpdateThread(Grid* grid)
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 1000), "Tetris", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode(800, 1000), "Tetris", sf::Style::Fullscreen);
 
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);

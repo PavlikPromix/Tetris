@@ -35,7 +35,7 @@ void Grid::CreatePiece()
 	switch (rnd) {
 		case 0:
 			type = Piece::LONG;
-			color = sf::Color(133, 193, 233); // Blue
+			color = sf::Color(92, 190, 255); // Blue
 			break;
 		case 1:
 			type = Piece::L;
@@ -43,23 +43,23 @@ void Grid::CreatePiece()
 			break;
 		case 2:
 			type = Piece::LBACK;
-			color = sf::Color(220, 118, 51); // Red
+			color = sf::Color(220, 49, 49); // Red
 			break;
 		case 3:
 			type = Piece::SQUARE;
-			color = sf::Color(244, 208, 63); // Yellow
+			color = sf::Color(241, 244, 57); // Yellow
 			break;
 		case 4:
 			type = Piece::Z;
-			color = sf::Color(165, 105, 189); // Magenta
+			color = sf::Color(255, 64, 175); // Magenta
 			break;
 		case 5:
 			type = Piece::ZBACK;
-			color = sf::Color(205, 97, 85); // Brown
+			color = sf::Color(245, 245, 220); // Beige
 			break;
 		case 6:
 			type = Piece::T;
-			color = sf::Color(82, 190, 128); // Green
+			color = sf::Color(0, 219, 95); // Green
 			break;
 		default:
 			break;
