@@ -20,13 +20,13 @@ void UpdateThread(Grid* grid)
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 1000), "Tetris", sf::Style::Fullscreen);
+	sf::RenderWindow window(sf::VideoMode(800, 1000), "Tetris", sf::Style::Default);
 
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
 
 	sf::Font font;
-	if (!font.loadFromFile("fonts/publicPixel.ttf")) {
+	if (!font.loadFromFile("../../../fonts/publicPixel.ttf")) {
 		std::cout << "\e[0;31m[Error]\e[0m Font wasn't loaded" << std::endl;
 	}
 
@@ -103,6 +103,7 @@ int main()
 						else if (gui.IsInSettings() && gui.GetSubSelected() == 0) {
 							gui.ToggleColorMode();
 							grid.SetColorMode(gui.GetColorMode());
+							grid.Reset();
 						}
 					}
 					if (gui.GetSelected() == 3)
