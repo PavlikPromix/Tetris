@@ -222,6 +222,8 @@ void Grid::Mount()
 	CreatePiece();
 
 	// filled line check
+	int rowsCleared = 0;
+
 	for (int y = 0; y < 20; y++) {
 		int inrow = 0;
 		for (int x = 0; x < 10; x++) {
@@ -236,8 +238,14 @@ void Grid::Mount()
 				if (block.pos.y < y)
 					block.pos += { 0, 1 };
 
-			score++;
+			rowsCleared++;
 		}
+	}
+
+	int points = 0;
+	if (rowsCleared > 0) {
+		points = 1 << (rowsCleared - 1);  // Points multiplier (e.g., 1, 2, 4, 8, ...).
+		score += points;
 	}
 }
 
