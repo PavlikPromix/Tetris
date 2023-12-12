@@ -18,6 +18,77 @@ void UpdateThread(Grid* grid)
 	}
 }
 
+void HandleInput(sf::RenderWindow& window, Grid& grid, Gui& gui, bool& inGame, bool& running, std::thread& updThread) {
+	sf::Event event;
+	while (window.pollEvent(event)) {
+		if (event.type == sf::Event::Closed) {
+			running = false;
+			window.close();
+		}
+
+		if (event.type == sf::Event::KeyPressed) {
+			switch (event.key.code) {
+			case sf::Keyboard::Q:
+				if (inGame) {
+					inGame = false;
+					grid.Reset();
+				}
+				else {
+					running = false;
+					window.close();
+				}
+				break;
+			case sf::Keyboard::A:
+			case sf::Keyboard::Left:
+				if (inGame) grid.MoveLeft();
+				break;
+			case sf::Keyboard::D:
+			case sf::Keyboard::Right:
+				if (inGame) grid.MoveRight();
+				break;
+			case sf::Keyboard::W:
+			case sf::Keyboard::Up:
+				if (inGame) grid.Rotate();
+				else gui.SelectPrev();
+				break;
+			case sf::Keyboard::S:
+			case sf::Keyboard::Down:
+				if (inGame) grid.MoveDown();
+				else gui.SelectNext();
+				break;
+			case sf::Keyboard::Space:
+				if (inGame) grid.InstantDown();
+				break;
+			case sf::Keyboard::Enter:
+				if (!inGame) {
+					if (gui.GetSelected() == 0)
+						inGame = true;
+					if (gui.GetSelected() == 1)
+						gui.ToggleControlsMenu();
+					if (gui.GetSelected() == 2) {
+						if ((gui.IsInSettings() && gui.GetSubSelected() == 1) || !gui.IsInSettings())
+							gui.ToggleSettingsMenu();
+						else if (gui.IsInSettings() && gui.GetSubSelected() == 0) {
+							gui.ToggleColorMode();
+							grid.SetColorMode(gui.GetColorMode());
+							grid.Reset();
+						}
+					}
+					if (gui.GetSelected() == 3)
+						gui.ToggleStatsMenu();
+					if (gui.GetSelected() == 4) {
+						running = false;
+						updThread.join();
+						window.close();
+					}
+				}
+				break;
+			}
+		}
+	}
+}
+
+
 int main()
 {
 	srand(time(0));
@@ -47,78 +118,7 @@ int main()
 	std::thread updThread(UpdateThread, &grid);
 
 	while (window.isOpen()) {
-		sf::Event e;
-		while (window.pollEvent(e)) {
-			if (e.type == sf::Event::Closed) {
-				running = false;
-				updThread.join();
-				window.close();
-			}
-			if (e.type == sf::Event::KeyPressed && e.key.code == sf::Keyboard::Q) {
-				if (inGame) {
-					inGame = false;
-					grid.Reset();
-				}
-				else {
-					running = false;
-					updThread.join();
-					window.close();
-				}
-			}
-			if (e.type == sf::Event::KeyPressed && (e.key.code == sf::Keyboard::A || e.key.code == sf::Keyboard::Left)) { // Left
-				if (inGame)
-					grid.MoveLeft();
-			}
-
-			if (e.type == sf::Event::KeyPressed && (e.key.code == sf::Keyboard::D || e.key.code == sf::Keyboard::Right)) { // Right
-				if (inGame)
-					grid.MoveRight();
-			}
-
-			if (e.type == sf::Event::KeyPressed && (e.key.code == sf::Keyboard::W || e.key.code == sf::Keyboard::Up)) { // Rotate (UP)
-				if (inGame)
-					grid.Rotate();
-				else gui.SelectPrev();
-			}
-
-			if (e.type == sf::Event::KeyPressed && (e.key.code == sf::Keyboard::S || e.key.code == sf::Keyboard::Down)) { // Down
-				if (inGame)
-					grid.MoveDown();
-				else gui.SelectNext();
-			}
-
-			if (e.type == sf::Event::KeyPressed && e.key.code == sf::Keyboard::Space) {
-				if (inGame)
-					grid.InstantDown();
-			}
-
-			if (e.type == sf::Event::KeyPressed && e.key.code == sf::Keyboard::Enter) {
-				if (!inGame) {
-					if (gui.GetSelected() == 0)
-						inGame = true;
-					if (gui.GetSelected() == 1)
-						gui.ToggleControlsMenu();
-					if (gui.GetSelected() == 2) {
-						if ((gui.IsInSettings() && gui.GetSubSelected() == 1) || !gui.IsInSettings())
-							gui.ToggleSettingsMenu();
-						else if (gui.IsInSettings() && gui.GetSubSelected() == 0) {
-							gui.ToggleColorMode();
-							grid.SetColorMode(gui.GetColorMode());
-							grid.Reset();
-						}
-					}
-					if (gui.GetSelected() == 3)
-						gui.ToggleStatsMenu();
-					if (gui.GetSelected() == 4) {
-						running = false;
-						updThread.join();
-						window.close();
-					}
-				}
-
-			}
-
-		}
+		HandleInput(window, grid, gui, inGame, running, updThread);
 
 		window.clear(sf::Color::Black);
 
