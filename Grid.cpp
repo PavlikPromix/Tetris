@@ -18,7 +18,7 @@ Grid::Grid(sf::RenderWindow& window)
 							border.getPosition().y + size * (i / 10) });
 		grid[i].setFillColor(sf::Color::Transparent);
 		grid[i].setOutlineColor(sf::Color(20, 20, 20));
-		//grid[i].setOutlineThickness(1);
+		grid[i].setOutlineThickness(1);
 	}
 
 	score = 0;
@@ -193,28 +193,35 @@ void Grid::Mount()
 
 	CreatePiece();
 
-	// filled line check
-	int rowsCleared = 0;
-
+	// Detect filled lines
+	std::vector<int> rowsToClear;
 	for (int y = 0; y < 20; y++) {
-		int inrow = 0;
+		bool lineFull = true;
 		for (int x = 0; x < 10; x++) {
-			if (GridAt(x, y).getFillColor() == sf::Color::Transparent)
+			if (GridAt(x, y).getFillColor() == sf::Color::Transparent) {
+				lineFull = false;
 				break;
-			inrow += 1;
+			}
 		}
-		if (inrow == 10) {
-			blocks.erase(std::remove_if(blocks.begin(), blocks.end(), [&y](Block block) { return block.pos.y == y; }), blocks.end());
-
-			for (Block& block : blocks)
-				if (block.pos.y < y)
-					block.pos += { 0, 1 };
-
-			rowsCleared++;
+		if (lineFull) {
+			rowsToClear.push_back(y);
 		}
 	}
 
+	// Clear lines and move down blocks above
+	for (int y : rowsToClear) {
+		blocks.erase(std::remove_if(blocks.begin(), blocks.end(),
+			[y](const Block& block) { return block.pos.y == y; }), blocks.end());
+
+		for (Block& block : blocks) {
+			if (block.pos.y < y)
+				block.pos.y += 1;
+		}
+	}
+
+	// Score calculation
 	int points = 0;
+	int rowsCleared = rowsToClear.size();
 	if (rowsCleared > 0) {
 		points = 1 << (rowsCleared - 1);  // Points multiplier (e.g., 1, 2, 4, 8, ...).
 		score += points;
