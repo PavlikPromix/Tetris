@@ -28,48 +28,20 @@ Grid::Grid(sf::RenderWindow& window)
 
 void Grid::CreatePiece()
 {
-	srand(time(0));
-	Piece::PieceType type = Piece::SQUARE;
-	sf::Color color = sf::Color::White;
-	int rnd = rand() % 7;
-	switch (rnd) {
-		case 0:
-			type = Piece::LONG;
-			color = sf::Color(92, 190, 255); // Blue
-			break;
-		case 1:
-			type = Piece::L;
-			color = sf::Color(255, 165, 0); // Orange
-			break;
-		case 2:
-			type = Piece::LBACK;
-			color = sf::Color(220, 49, 49); // Red
-			break;
-		case 3:
-			type = Piece::SQUARE;
-			color = sf::Color(241, 244, 57); // Yellow
-			break;
-		case 4:
-			type = Piece::Z;
-			color = sf::Color(255, 64, 175); // Magenta
-			break;
-		case 5:
-			type = Piece::ZBACK;
-			color = sf::Color(245, 245, 220); // Beige
-			break;
-		case 6:
-			type = Piece::T;
-			color = sf::Color(0, 219, 95); // Green
-			break;
-		default:
-			break;
-	}
-	if (!colorMode) {
-		controllable = Piece(type, { 4, 0 }, sf::Color::White);
-		return;
-	}
+	static const std::array<std::pair<Piece::PieceType, sf::Color>, 7> pieceInfo = { {
+		{Piece::LONG, sf::Color(92, 190, 255)},   // Blue
+		{Piece::L, sf::Color(255, 165, 0)},       // Orange
+		{Piece::LBACK, sf::Color(220, 49, 49)},   // Red
+		{Piece::SQUARE, sf::Color(241, 244, 57)}, // Yellow
+		{Piece::Z, sf::Color(255, 64, 175)},      // Magenta
+		{Piece::ZBACK, sf::Color(245, 245, 220)}, // Beige
+		{Piece::T, sf::Color(0, 219, 95)}         // Green
+	} };
 
-	controllable = Piece(type, { 4, 0 }, color);
+	int rnd = rand() % pieceInfo.size();
+	const auto& [type, color] = pieceInfo[rnd];
+
+	controllable = Piece(type, { 4, 0 }, colorMode ? color : sf::Color::White);
 }
 
 void Grid::MoveDown()
