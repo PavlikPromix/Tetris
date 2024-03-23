@@ -1,5 +1,5 @@
 # Tetris
-## Introducing **Tetris**! The most selling game ever!
+## Introducing **Tetris**! The best-selling game ever!
 
 # Controls
 - Down `S`/`Down Arrow`
